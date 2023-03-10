@@ -1,0 +1,30 @@
+---
+exp:
+  experiment_dir: "C:/MSc/dev/mbgan/logs/"
+  type: "autoencoder"
+  overfit: false
+  name: "autoencoder_exp"
+
+data:
+  input_size: 27 # 16s
+  output_size: 215 # wgs
+  s16_csv: "dataset/s16_genus_ra.csv"
+  wgs_csv: "dataset/wgs_genus_ra.csv"
+
+generator:
+  hyperparameters:
+    lr: 0.001
+    beta1: 0.9
+    beta2: 0.999
+    clipvalue: 0
+    clipnorm: 0
+    latent_dim: 128
+    loss_weights:
+      bce_loss: 1
+
+
+trainer:
+  num_epochs: 2
+  batch_size: 32
+  log_freq: 5
+  n_gpus: 1

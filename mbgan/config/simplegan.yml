@@ -1,0 +1,39 @@
+---
+exp:
+  experiment_dir: "C:/MSc/dev/mbgan/logs/"
+  type: "simplegan"
+  overfit: false
+  name: "simplegan_exp"
+
+data:
+  input_size: 27
+  output_size: 215
+  s16_csv: "dataset/s16_genus_ra.csv"
+  wgs_csv: "dataset/wgs_genus_ra.csv"
+
+generator:
+  hyperparameters:
+    lr: 0.001
+    beta1: 0.9
+    beta2: 0.999
+    clipvalue: 0
+    clipnorm: 0
+    loss_weights:
+      bce_loss: 1
+
+
+discriminator:
+  hyperparameters:
+    lr: 0.001
+    beta1: 0.9
+    beta2: 0.999
+    clipvalue: 0
+    clipnorm: 0
+    loss_weights:
+      bce_loss: 1
+
+trainer:
+  num_epochs: 5
+  batch_size: 32
+  log_freq: 5
+  n_gpus: 1
