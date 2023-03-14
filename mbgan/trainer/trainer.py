@@ -3,6 +3,10 @@ from torch import optim
 import itertools
 import pandas as pd
 import torch
+from torch.utils.tensorboard import SummaryWriter
+
+from collections import defaultdict
+
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -16,6 +20,7 @@ class AETrainer():
         self.optimizer = optim.Adam(self.generator.parameters(), lr=self.config.generator.hyperparameters.lr,
                                     betas=(self.config.generator.hyperparameters.beta1,
                                            self.config.generator.hyperparameters.beta2))
+        self.writer = SummaryWriter(log_dir=self.config.logdir)
 
     def train_on_batch(self, sixteens, wgs):
         self.optimizer.zero_grad()
@@ -34,6 +39,7 @@ class AETrainer():
     def train(self):
         avg_loss = []
         for epoch in range(self.config.trainer.num_epochs):
+            metrics = defaultdict()
             losses = []
 
             for real_A, real_B in self.data_loader:
@@ -41,11 +47,17 @@ class AETrainer():
                 loss = loss.detach().numpy().tolist()
                 losses.append(loss)
 
-            print(f"Epoch [{epoch}/{self.config.trainer.num_epochs}]\t"
+
+            print(f"Epoch [{epoch}/{self.config.trainer.num_epochs}]\t" 
                   f"Average MSE reconstruction loss: {sum(losses) / len(losses):.4f}\t")
             epoch_avg = sum(losses)/len(losses)
             print(epoch_avg)
             avg_loss.append(epoch_avg)
+            metrics["train/mse_loss"] = epoch_avg
+            print(epoch)
+            self.writer.add_scalar(tag='holder', scalar_value=epoch_avg, global_step=epoch)
+            #for metric_name, value in metrics.items():
+                #self.writer.add_scalar(tag=metric_name, scalar_value=value, global_step=epoch)
         #df = pd.DataFrame({"Average MSE" : losses})
         #df.to_csv(f"C:/MSc/dev/mbgan/logs/{self.config.exp.name}.csv")
 
@@ -65,6 +77,7 @@ class SimpleGANTrainer():
                                                   betas=(self.config.discriminator.hyperparameters.beta1,
                                                       self.config.discriminator.hyperparameters.beta2)
                                                   )
+        self.writer = SummaryWriter()
 
     def train_on_batch(self, sixteens, wgs):
         self.optimizer.zero_grad()
@@ -89,6 +102,7 @@ class SimpleGANTrainer():
 
             print(f"Epoch [{epoch}/{self.config.trainer.num_epochs}]\t"
                   f"Average MSE reconstruction loss: {sum(losses) / len(losses):.4f}\t")
+            self.writer.add_scalar
 
         df = pd.DataFrame({"Average MSE" : losses})
         df.to_csv(f"C:/MSc/dev/mbgan/logs/{self.config.exp.name}.csv")
@@ -119,6 +133,7 @@ class CycleGANTrainer():
         self.D_A_losses = []
         self.D_B_losses = []
         self.G_losses = []
+        self.writer = SummaryWriter()
 
     def generate_A_B(self, real_A):
         fake_B = self.G_AB(real_A)

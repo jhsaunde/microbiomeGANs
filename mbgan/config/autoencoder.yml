@@ -24,7 +24,7 @@ generator:
 
 
 trainer:
-  num_epochs: 2
+  num_epochs: 10
   batch_size: 32
   log_freq: 5
   n_gpus: 1

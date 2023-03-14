@@ -19,6 +19,9 @@ def get_config_from_yml(yml_file):
     return config
 
 
-def process_config(yml_file):
+def process_config(yml_file, exp_name):
     config = get_config_from_yml(yml_file)
+    config.logdir = os.path.join("logs", exp_name)
+    if not os.path.isdir(config.logdir):
+        os.makedirs(config.logdir)
     return config

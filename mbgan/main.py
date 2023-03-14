@@ -15,8 +15,8 @@ def print_file(filename):
         print(line)
 
 
-def main(config_file: str):
-    config = process_config(config_file)
+def main(config_file: str, exp_name: str):
+    config = process_config(config_file, exp_name=exp_name)
 
     dataset = MBDataset(config=config)
     data_loader = MBDataloader(dataset=dataset, config=config, shuffle=True)
@@ -45,7 +45,7 @@ def main(config_file: str):
     print_file(config_file)
 
     print("#########################################################")
-    print(f"Experiment: {config.exp.name} has started!")
+    print(f"Experiment: {exp_name} has started!")
     print("#########################################################")
 
     trainer.train()
@@ -55,6 +55,7 @@ def main(config_file: str):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--config_file", type=str, default="config/autoencoder.yml", help="config path to use")
+    ap.add_argument("--exp_name", type=str, default="ae_lr_0.001_bs_8")
     args = vars(ap.parse_args())
 
-    main(config_file=args["config_file"])
+    main(config_file=args["config_file"], exp_name=args["exp_name"])
