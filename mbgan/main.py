@@ -49,6 +49,10 @@ def main(config_file: str, exp_name: str):
     print("#########################################################")
 
     trainer.train()
+
+    # Common pytorch convention to save file as .py or .pth
+    torch.save(trainer.generator.state_dict(), config.exp.experiment_dir+config.exp.name+".py")
+
     return
 
 

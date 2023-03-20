@@ -20,8 +20,8 @@ class MBDataset(Dataset):
         self.preprocess_data()
 
     def preprocess_data(self):
-        self.df_16s = pd.read_csv(self.s16_csv).drop(['ID'], axis=1)
-        self.df_wgs = pd.read_csv(self.wgs_csv).drop(['ID'], axis=1)
+        self.df_16s = pd.read_csv(self.s16_csv).drop(['sample'], axis=1)
+        self.df_wgs = pd.read_csv(self.wgs_csv).drop(['sample'], axis=1)
 
         self.tensor_16s = torch.tensor(self.df_16s.values).float()
         self.tensor_wgs = torch.tensor(self.df_wgs.values).float()
@@ -54,3 +54,27 @@ class MBDataloader(DataLoader):
         else:
             super().__init__(dataset=self.dataset, batch_size=self.batch_size, shuffle=self.shuffle,
                              collate_fn=self.collate_fn, num_workers=4, drop_last=True)
+
+
+
+class MBTestDataset(Dataset):
+    def __init__(self, config):
+        super().__init__()
+        self.config = config
+
+        self.s16_csv = self.config.data.test_s16_csv
+        self.df_16s = None
+        self.tensor_16s = None
+
+        self.preprocess_data()
+
+    def preprocess_data(self):
+        self.df_16s = pd.read_csv(self.s16_csv).drop(['sample'], axis=1)
+
+        self.tensor_16s = torch.tensor(self.df_16s.values).float()
+
+    def __getitem__(self, index):
+        return self.tensor_16s[index]
+
+    def __len__(self):
+        return min(len(self.df_16s))

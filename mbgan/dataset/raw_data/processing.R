@@ -6,10 +6,10 @@
 # subject and each column an OTU
 # at a given taxonomic resolution
 library(tidyverse)
-
-wgs <- read_tsv("C:\\MSc\\dev\\microbiomeGANs\\mbgan\\dataset\\raw_data\\diabimmune_karelia_metaphlan_table.txt")
-s16 <- read_tsv("C:\\MSc\\dev\\microbiomeGANs\\mbgan\\dataset\\raw_data\\diabimmune_karelia_16s_otu_table.txt")
-meta <- read_tsv("C:\\MSc\\dev\\microbiomeGANs\\mbgan\\dataset\\raw_data\\diabimmune_karelia_metadata.txt")
+library(here)
+wgs <- read_tsv("/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/raw_data/diabimmune_karelia_metaphlan_table.txt")
+s16 <- read_tsv("/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/raw_data/diabimmune_karelia_16s_otu_table.txt")
+meta <- read_tsv("/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/raw_data/diabimmune_karelia_metadata.txt")
 
 
 
@@ -161,7 +161,7 @@ wgs <- wgs %>%
   select(ID, SampleID, RA) %>%
   rename(OTU = ID) %>%
   pivot_wider(names_from = 'SampleID', values_from = RA)
-
+data(dietswap)
 wgs_species_ra <- wgs %>%
   separate(OTU, into = c("kingdom", "phylum", "class", "order", "family", "genus", "species", "strain"), sep = "\\|", remove = F) %>%
   filter(is.na(strain), !is.na(species)) %>%
@@ -170,9 +170,9 @@ wgs_species_ra <- wgs %>%
   pivot_wider(names_from = OTU, values_from = RA)
   
 #### Save Full Datasets ----
-write_csv(x = wgs_species_ra, "C:\\MSc\\dev\\microbiomeGANs\\mbgan\\dataset\\wgs_species_ra.csv")
-write_csv(x = s16_genus_ra, "C:\\MSc\\dev\\microbiomeGANs\\mbgan\\dataset\\s16_genus_ra.csv")
-write_csv(x = s16_species_ra, "C:\\MSc\\dev\\microbiomeGANs\\mbgan\\dataset\\s16_species_ra.csv")
+write_csv(x = wgs_species_ra, "/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/wgs_species_ra.csv")
+write_csv(x = s16_genus_ra, "/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/s16_genus_ra.csv")
+write_csv(x = s16_species_ra, "/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/s16_species_ra.csv")
 
 
 #### Test / Train ----
@@ -183,9 +183,9 @@ nomatches_genus <- s16_genus_ra %>%
 nomatches_species <- s16_species_ra %>%
   filter(!sample %in% wgs_species_ra$sample)
 
-write_csv(x = nomatches_genus, "C:\\MSc\\dev\\microbiomeGANs\\mbgan\\dataset\\s16_genus_nomatches.csv")
+write_csv(x = nomatches_genus, "/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/s16_genus_nomatches.csv")
 
-write_csv(x = nomatches_species, "C:\\MSc\\dev\\microbiomeGANs\\mbgan\\dataset\\s16_species_nomatches.csv")
+write_csv(x = nomatches_species, "/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/s16_species_nomatches.csv")
 
 
 # Matches available, train / test 80:20
@@ -215,10 +215,10 @@ test_16s_genus <- s16_genus_ra[-rows_for_training,]
 train_16s_species <- s16_species_ra[rows_for_training,]
 test_16s_species <- s16_species_ra[-rows_for_training,]
 
-write_csv(x = train_wgs_species, "C:\\MSc\\dev\\microbiomeGANs\\mbgan\\dataset\\train_wgs_species.csv")
-write_csv(x = test_wgs_species, "C:\\MSc\\dev\\microbiomeGANs\\mbgan\\dataset\\test_wgs_species.csv")
-write_csv(x = train_16s_genus, "C:\\MSc\\dev\\microbiomeGANs\\mbgan\\dataset\\train_16s_genus.csv")
-write_csv(x = test_16s_genus, "C:\\MSc\\dev\\microbiomeGANs\\mbgan\\dataset\\test_16s_genus.csv")
-write_csv(x = train_16s_species, "C:\\MSc\\dev\\microbiomeGANs\\mbgan\\dataset\\train_16s_species.csv")
-write_csv(x = test_16s_species, "C:\\MSc\\dev\\microbiomeGANs\\mbgan\\dataset\\test_16s_species.csv")
+write_csv(x = train_wgs_species, "/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/train_wgs_species.csv")
+write_csv(x = test_wgs_species, "/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/validate_wgs_species.csv")
+write_csv(x = train_16s_genus, "/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/train_16s_genus.csv")
+write_csv(x = test_16s_genus, "/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/validate_16s_genus.csv")
+write_csv(x = train_16s_species, "/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/train_16s_species.csv")
+write_csv(x = test_16s_species, "/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/validate_16s_species.csv")
 

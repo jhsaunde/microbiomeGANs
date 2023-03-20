@@ -1,15 +1,17 @@
 ---
 exp:
-  experiment_dir: "C:/MSc/dev/mbgan/logs/"
+  experiment_dir: "/Users/jamessaunders/dev/microbiomeGANs/mbgan/logs/"
+  dir: "/Users/jamessaunders/dev/microbiomeGANs/mbgan/"
   type: "autoencoder"
   overfit: false
-  name: "autoencoder_exp"
+  name: "autoencoder_exp_test"
 
 data:
-  input_size: 27 # 16s
-  output_size: 215 # wgs
+  input_size: 144 # 16s
+  output_size: 624 # wgs
   s16_csv: "dataset/s16_genus_ra.csv"
-  wgs_csv: "dataset/wgs_genus_ra.csv"
+  wgs_csv: "dataset/wgs_species_ra.csv"
+  test_s16_csv: "dataset/s16_genus_nomatches.csv"
 
 generator:
   hyperparameters:
@@ -22,9 +24,9 @@ generator:
     loss_weights:
       bce_loss: 1
 
-
 trainer:
-  num_epochs: 10
+  num_epochs: 2
   batch_size: 32
   log_freq: 5
   n_gpus: 1
+

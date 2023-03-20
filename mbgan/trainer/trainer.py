@@ -6,7 +6,7 @@ import torch
 from torch.utils.tensorboard import SummaryWriter
 
 from collections import defaultdict
-
+import os
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -36,7 +36,9 @@ class AETrainer():
         self.optimizer.step()
         return loss
 
+
     def train(self):
+        self.generator.train()
         avg_loss = []
         for epoch in range(self.config.trainer.num_epochs):
             metrics = defaultdict()
@@ -50,17 +52,16 @@ class AETrainer():
 
             print(f"Epoch [{epoch}/{self.config.trainer.num_epochs}]\t" 
                   f"Average MSE reconstruction loss: {sum(losses) / len(losses):.4f}\t")
+
             epoch_avg = sum(losses)/len(losses)
-            print(epoch_avg)
             avg_loss.append(epoch_avg)
             metrics["train/mse_loss"] = epoch_avg
-            print(epoch)
             self.writer.add_scalar(tag='holder', scalar_value=epoch_avg, global_step=epoch)
-            #for metric_name, value in metrics.items():
-                #self.writer.add_scalar(tag=metric_name, scalar_value=value, global_step=epoch)
-        #df = pd.DataFrame({"Average MSE" : losses})
-        #df.to_csv(f"C:/MSc/dev/mbgan/logs/{self.config.exp.name}.csv")
 
+
+        df = pd.DataFrame({"Average MSE" : avg_loss})
+        csv_filename = f"{self.config.exp.name}.csv"
+        df.to_csv(os.path.join(self.config.exp.experiment_dir, csv_filename))
 
 
 class SimpleGANTrainer():
@@ -70,12 +71,18 @@ class SimpleGANTrainer():
         self.discriminator = discriminator
         self.data_loader = data_loader
         self.loss = MSELoss()
-        self.optimizer = optim.Adam(self.generator.parameters(), lr=self.config.generator.hyperparameters.lr, betas=(
-            self.config.generator.hyperparameters.beta1, self.config.generator.hyperparameters.beta2))
+        self.optimizer = optim.Adam(self.generator.parameters(),
+                                    lr=self.config.generator.hyperparameters.lr,
+                                    betas=(
+                                        self.config.generator.hyperparameters.beta1,
+                                        self.config.generator.hyperparameters.beta2)
+                                    )
         self.discriminator_optimizer = optim.Adam(self.discriminator.parameters(),
                                                   lr=self.config.discriminator.hyperparameters.lr,
-                                                  betas=(self.config.discriminator.hyperparameters.beta1,
-                                                      self.config.discriminator.hyperparameters.beta2)
+                                                  betas=(
+                                                      self.config.discriminator.hyperparameters.beta1,
+                                                      self.config.discriminator.hyperparameters.beta2
+                                                         )
                                                   )
         self.writer = SummaryWriter()
 
@@ -105,7 +112,8 @@ class SimpleGANTrainer():
             self.writer.add_scalar
 
         df = pd.DataFrame({"Average MSE" : losses})
-        df.to_csv(f"C:/MSc/dev/mbgan/logs/{self.config.exp.name}.csv")
+        csv_filename = f"{self.config.exp.name}.csv"
+        df.to_csv(os.path.join(self.config.exp.experiment_dir, csv_filename))
 
 
 class CycleGANTrainer():
@@ -122,9 +130,15 @@ class CycleGANTrainer():
                                       betas=(self.config.generator.hyperparameters.beta1,
                                              self.config.generator.hyperparameters.beta2))
 
-        self.D_A_optimizer = optim.Adam(self.D_A.parameters(), lr=self.config.discriminator.hyperparameters.lr, betas=(
-            self.config.discriminator.hyperparameters.beta1, self.config.discriminator.hyperparameters.beta2))
-        self.D_B_optimizer = optim.Adam(self.D_B.parameters(), lr=self.config.discriminator.hyperparameters.lr, betas=(
+        self.D_A_optimizer = optim.Adam(self.D_A.parameters(),
+                                        lr=self.config.discriminator.hyperparameters.lr,
+                                        betas=(self.config.discriminator.hyperparameters.beta1,
+                                               self.config.discriminator.hyperparameters.beta2
+                                               )
+                                        )
+        self.D_B_optimizer = optim.Adam(self.D_B.parameters(),
+                                        lr=self.config.discriminator.hyperparameters.lr,
+                                        betas=(
             self.config.discriminator.hyperparameters.beta1, self.config.discriminator.hyperparameters.beta2))
 
         self.MSE_loss = MSELoss()
