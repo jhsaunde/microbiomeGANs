@@ -56,7 +56,7 @@ class AETrainer():
             epoch_avg = sum(losses)/len(losses)
             avg_loss.append(epoch_avg)
             metrics["train/mse_loss"] = epoch_avg
-            self.writer.add_scalar(tag='holder', scalar_value=epoch_avg, global_step=epoch)
+            self.writer.add_scalar(tag='mse', scalar_value=epoch_avg, global_step=epoch)
 
 
         df = pd.DataFrame({"Average MSE" : avg_loss})

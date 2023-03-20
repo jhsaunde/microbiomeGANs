@@ -77,4 +77,4 @@ class MBTestDataset(Dataset):
         return self.tensor_16s[index]
 
     def __len__(self):
-        return min(len(self.df_16s))
+        return min(len(self.df_16s), len(self.df_16s))

@@ -4,7 +4,7 @@ exp:
   dir: "/Users/jamessaunders/dev/microbiomeGANs/mbgan/"
   type: "autoencoder"
   overfit: false
-  name: "autoencoder_exp_test"
+  name: "autoencoder_exp"
 
 data:
   input_size: 144 # 16s
