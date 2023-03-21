@@ -1,4 +1,4 @@
-from utils.losses import MSELoss, L1Loss
+from utils.losses import MSELoss, L1Loss, kl_divergence, swd_loss
 from torch import optim
 import itertools
 import pandas as pd
@@ -16,10 +16,14 @@ class AETrainer():
         self.config = config
         self.generator = generator
         self.data_loader = data_loader
-        self.loss = MSELoss()
+        # self.loss = swd_loss
+        # self.loss = MSELoss()
+        # self.loss = L1Loss()
+        self.loss = kl_divergence
         self.optimizer = optim.Adam(self.generator.parameters(), lr=self.config.generator.hyperparameters.lr,
                                     betas=(self.config.generator.hyperparameters.beta1,
-                                           self.config.generator.hyperparameters.beta2))
+                                           self.config.generator.hyperparameters.beta2)
+                                    )
         self.writer = SummaryWriter(log_dir=self.config.logdir)
 
     def train_on_batch(self, sixteens, wgs):
