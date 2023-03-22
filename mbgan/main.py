@@ -59,7 +59,7 @@ def main(config_file: str, exp_name: str):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--config_file", type=str, default="config/autoencoder.yml", help="config path to use")
-    ap.add_argument("--exp.name", type=str, default="FFN_3e_l2_n128_swd_b32_LT")
+    ap.add_argument("--exp.name", type=str, default="AE_3e5d_l2_n128_mse_b32_LT_i500")
     args = vars(ap.parse_args())
 
     main(config_file=args["config_file"], exp_name=args["exp.name"])

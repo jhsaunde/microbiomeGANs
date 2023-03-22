@@ -14,7 +14,7 @@ def main(config_file: str, exp_name: str):
     data_loader = MBDataloader(dataset=dataset, config=config, shuffle=True)
 
     model = ae_models.Autoencoder(config.data.input_size, config.data.output_size)
-    model.load_state_dict(torch.load(os.path.join(config.exp.experiment_dir, "autoencoder_exp.py")))
+    model.load_state_dict(torch.load(os.path.join(config.exp.experiment_dir, "AE_3e5d_l2_n128_mse_b32_LT_i500.py")))
     model.eval()
 
     with torch.no_grad():
