@@ -16,10 +16,10 @@ class AETrainer():
         self.config = config
         self.generator = generator
         self.data_loader = data_loader
-        # self.loss = swd_loss
+        self.loss = swd_loss
         # self.loss = MSELoss()
         # self.loss = L1Loss()
-        self.loss = kl_divergence
+        # self.loss = kl_divergence
         self.optimizer = optim.Adam(self.generator.parameters(), lr=self.config.generator.hyperparameters.lr,
                                     betas=(self.config.generator.hyperparameters.beta1,
                                            self.config.generator.hyperparameters.beta2)

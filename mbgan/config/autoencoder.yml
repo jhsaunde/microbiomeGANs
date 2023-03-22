@@ -4,7 +4,7 @@ exp:
   dir: "/Users/jamessaunders/dev/microbiomeGANs/mbgan/"
   type: "autoencoder"
   overfit: false
-  name: "AE_3e3d_l2_n128_kl_b128"
+  name: "FFN_3e_l2_n128_swd_b32_LT"
 
 data:
   input_size: 144 # 16s
@@ -26,7 +26,7 @@ generator:
 
 trainer:
   num_epochs: 20
-  batch_size: 128
+  batch_size: 32
   log_freq: 5
   n_gpus: 1
 
