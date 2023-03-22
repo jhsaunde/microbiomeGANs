@@ -5,6 +5,7 @@ from utils.utils import process_config
 from mbgan.models import ae_models
 from dataset.dataloader import MBDataloader, MBTestDataset
 import pandas as pd
+import numpy as np
 import os
 
 def main(config_file: str, exp_name: str):
@@ -14,7 +15,7 @@ def main(config_file: str, exp_name: str):
     data_loader = MBDataloader(dataset=dataset, config=config, shuffle=True)
 
     model = ae_models.Autoencoder(config.data.input_size, config.data.output_size)
-    model.load_state_dict(torch.load(os.path.join(config.exp.experiment_dir, "AE_3e5d_l2_n128_mse_b32_LT_i500.py")))
+    model.load_state_dict(torch.load(os.path.join(config.exp.experiment_dir, "FFN_3e_l2_n128_mse_b32_LT_i500.py")))
     model.eval()
 
     with torch.no_grad():
@@ -25,8 +26,8 @@ def main(config_file: str, exp_name: str):
             predicted_outputs = predicted_outputs.detach().numpy().tolist()
             results.append(predicted_outputs)
 
-
-        df = pd.DataFrame({"RA" : results})
+        results = np.concatenate(results)
+        df = pd.DataFrame(results)
         csv_filename = f"{config.exp.name}_results.csv"
         df.to_csv(os.path.join(config.exp.experiment_dir, csv_filename))
 
