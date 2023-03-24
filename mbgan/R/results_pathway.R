@@ -3,9 +3,13 @@ library(tidyverse)
 
 file_names <- list.files('logs/', pattern = '.csv', full.names = T)
 
+initial <- file_names[!str_detect(file_names, "_results")]
+
+results <- file_names[str_detect(file_names, "_results")]
+
 df <- map2_dfr(
-  .x = file_names,
-  .y = file_names,
+  .x = initial,
+  .y = initial,
   .f = ~ read_csv(.x, col_types = cols(.default = col_character())) %>%
     rename_with( ~ c('iter', 'loss')) %>%
     mutate(nodes = if_else(str_detect(.y, "_n64_"), "64", "128")) %>%
@@ -52,3 +56,20 @@ df %>%
        title = "Log-Transform, Batch Size 32",
        color = "Architecture & Nodes") +
   scale_color_brewer(palette = "Set1")
+
+results <- read_csv(results)
+
+results <- results[,-1]
+
+colnames(results) <- colnames(wgs_species_ra)[-1]
+
+results %>%
+  rowid_to_column() %>%
+  mutate(rowid = as.character(rowid)) %>%
+  pivot_longer(-rowid) %>%
+  ggplot(aes(x = name, y = rowid)) +
+  geom_tile()
+  
+
+
+colnames(results[,-1])  <- colnames(wgs_species_ra)[-1]
