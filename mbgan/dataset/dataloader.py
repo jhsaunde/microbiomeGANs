@@ -33,16 +33,44 @@ class MBDataset(Dataset):
         return min(len(self.df_16s), len(self.df_wgs))
 
 
+class MBTestDataset(Dataset):
+    def __init__(self, config):
+        super().__init__()
+        self.config = config
+
+        self.s16_csv = self.config.data.test_s16_csv
+        self.df_16s = None
+        self.tensor_16s = None
+        self.preprocess_data()
+
+    def preprocess_data(self):
+        self.df_16s = pd.read_csv(self.s16_csv).drop(['sample'], axis=1)
+        self.tensor_16s = torch.tensor(self.df_16s.values).float()
+
+    def __getitem__(self, index):
+        return self.tensor_16s[index]
+
+    def __len__(self):
+        return min(len(self.df_16s), len(self.df_16s))
+
+
+
+
 class MBDataloader(DataLoader):
     """
     Base class for all data loaders
     """
 
-    def __init__(self, dataset, config, shuffle=True):
+    def __init__(self, dataset, config, shuffle=True, train=True):
         self.dataset = dataset
         self.config = config
-        self.shuffle = shuffle
-        self.batch_size = self.config.trainer.batch_size
+        if train:
+            self.shuffle = shuffle
+            self.batch_size = self.config.trainer.batch_size
+        else:
+            # test
+            self.shuffle = False
+            self.batch_size = 1
         self.collate_fn = None
 
         self.batch_idx = 0
@@ -56,25 +84,3 @@ class MBDataloader(DataLoader):
                              collate_fn=self.collate_fn, num_workers=4, drop_last=True)
 
 
-
-class MBTestDataset(Dataset):
-    def __init__(self, config):
-        super().__init__()
-        self.config = config
-
-        self.s16_csv = self.config.data.test_s16_csv
-        self.df_16s = None
-        self.tensor_16s = None
-
-        self.preprocess_data()
-
-    def preprocess_data(self):
-        self.df_16s = pd.read_csv(self.s16_csv).drop(['sample'], axis=1)
-
-        self.tensor_16s = torch.tensor(self.df_16s.values).float()
-
-    def __getitem__(self, index):
-        return self.tensor_16s[index]
-
-    def __len__(self):
-        return min(len(self.df_16s), len(self.df_16s))

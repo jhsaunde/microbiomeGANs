@@ -1,4 +1,4 @@
-from utils.losses import MSELoss, L1Loss, kl_divergence, swd_loss
+from utils.losses import mse_loss, l1_loss, kl_loss, wasserstein_loss
 from torch import optim
 import itertools
 import pandas as pd
@@ -10,16 +10,18 @@ import os
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+LOSSES = {"mse": mse_loss, "l1": l1_loss, "kl": kl_loss, "wasserstein": wasserstein_loss}
 
 class AETrainer():
     def __init__(self, config, data_loader, generator):
         self.config = config
         self.generator = generator
         self.data_loader = data_loader
-        # self.loss = swd_loss
-        self.loss = MSELoss()
-        # self.loss = L1Loss()
-        # self.loss = kl_divergence
+        if self.config.generator.loss in LOSSES:
+            self.loss = LOSSES[self.config.generator.loss]
+        else:
+            raise ValueError("Please check loss name again")
+
         self.optimizer = optim.Adam(self.generator.parameters(), lr=self.config.generator.hyperparameters.lr,
                                     betas=(self.config.generator.hyperparameters.beta1,
                                            self.config.generator.hyperparameters.beta2)
@@ -55,17 +57,18 @@ class AETrainer():
 
 
             print(f"Epoch [{epoch}/{self.config.trainer.num_epochs}]\t" 
-                  f"Average MSE reconstruction loss: {sum(losses) / len(losses):.4f}\t")
+                  f"Average reconstruction loss: {sum(losses) / len(losses):.4f}\t")
 
             epoch_avg = sum(losses)/len(losses)
             avg_loss.append(epoch_avg)
-            metrics["train/mse_loss"] = epoch_avg
+            metrics["train/loss"] = epoch_avg
             self.writer.add_scalar(tag='mse', scalar_value=epoch_avg, global_step=epoch)
 
 
         df = pd.DataFrame({"Average MSE" : avg_loss})
         csv_filename = f"{self.config.exp.name}.csv"
-        df.to_csv(os.path.join(self.config.exp.experiment_dir, csv_filename))
+        df.to_csv(os.path.join(self.config.logdir, csv_filename))
+
 
 
 class SimpleGANTrainer():
@@ -117,7 +120,7 @@ class SimpleGANTrainer():
 
         df = pd.DataFrame({"Average MSE" : losses})
         csv_filename = f"{self.config.exp.name}.csv"
-        df.to_csv(os.path.join(self.config.exp.experiment_dir, csv_filename))
+        df.to_csv(os.path.join(self.config.logdir, csv_filename))
 
 
 class CycleGANTrainer():

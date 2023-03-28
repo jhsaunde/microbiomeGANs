@@ -4,7 +4,7 @@ exp:
   dir: "/Users/jamessaunders/dev/microbiomeGANs/mbgan/"
   type: "autoencoder"
   overfit: false
-  name: "FFN_3e_l2_n128_mse_b32_LT_i500"
+  name: "autoencoder_flag"
 
 data:
   input_size: 144 # 16s
@@ -14,6 +14,7 @@ data:
   test_s16_csv: "dataset/s16_genus_nomatches.csv"
 
 generator:
+  loss: "mse"
   hyperparameters:
     lr: 0.001
     beta1: 0.9
@@ -25,7 +26,7 @@ generator:
       bce_loss: 1
 
 trainer:
-  num_epochs: 500
+  num_epochs: 2
   batch_size: 32
   log_freq: 5
   n_gpus: 1

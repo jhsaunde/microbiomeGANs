@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="620f87a2-6d7f-4024-8488-2753c46463c2" name="niagara">
+        <fileTransfer accessType="SFTP" host="niagara.scinet.utoronto.ca" port="22" sshConfigId="46e86e00-fbb7-4323-91a0-e36feca8d9f2" sshConfig="jhsaunde@niagara.scinet.utoronto.ca:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

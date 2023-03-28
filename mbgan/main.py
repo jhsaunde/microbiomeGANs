@@ -1,11 +1,13 @@
 import argparse
 import torch
 import yaml
+import os
 
 from utils.utils import process_config
 from dataset.dataloader import MBDataloader, MBDataset
 
 from build_network_and_trainer import build_generator, build_discriminator, build_trainer
+from test import test
 
 torch.manual_seed(42)
 
@@ -48,18 +50,22 @@ def main(config_file: str, exp_name: str):
     print(f"Experiment: {exp_name} has started!")
     print("#########################################################")
 
+    # Train the model
     trainer.train()
 
-    # Common pytorch convention to save file as .py or .pth
-    torch.save(trainer.generator.state_dict(), config.exp.experiment_dir+config.exp.name+".py")
+    # Test the model
+    test(model=trainer.generator, config=config)
 
     return
 
 
+# Name of the directory in logs is taken from default
+# Names of the .csv's (loss & test) and .pth file for saving the trained model come from config exp_name
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--config_file", type=str, default="config/autoencoder.yml", help="config path to use")
-    ap.add_argument("--exp.name", type=str, default="AE_3e5d_l2_n128_mse_b32_LT_i500")
+    ap.add_argument("--exp.name", type=str, default="autoencoder_WITH_TEST")
     args = vars(ap.parse_args())
 
     main(config_file=args["config_file"], exp_name=args["exp.name"])
+
