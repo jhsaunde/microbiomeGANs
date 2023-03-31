@@ -24,3 +24,5 @@ def test(model, config):
         df = pd.DataFrame(results)
         csv_filename = f"{config.exp.name}_results.csv"
         df.to_csv(os.path.join(config.logdir, csv_filename))
+
+

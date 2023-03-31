@@ -78,9 +78,9 @@ class MBDataloader(DataLoader):
 
         if self.collate_fn is None:
             super().__init__(dataset=self.dataset, batch_size=self.batch_size, shuffle=self.shuffle,
-                             num_workers=4, drop_last=True)
+                             num_workers=0, drop_last=True)
         else:
             super().__init__(dataset=self.dataset, batch_size=self.batch_size, shuffle=self.shuffle,
-                             collate_fn=self.collate_fn, num_workers=4, drop_last=True)
+                             collate_fn=self.collate_fn, num_workers=0, drop_last=True)
 
 
