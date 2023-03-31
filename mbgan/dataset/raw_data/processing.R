@@ -161,7 +161,7 @@ wgs <- wgs %>%
   select(ID, SampleID, RA) %>%
   rename(OTU = ID) %>%
   pivot_wider(names_from = 'SampleID', values_from = RA)
-data(dietswap)
+
 wgs_species_ra <- wgs %>%
   separate(OTU, into = c("kingdom", "phylum", "class", "order", "family", "genus", "species", "strain"), sep = "\\|", remove = F) %>%
   filter(is.na(strain), !is.na(species)) %>%

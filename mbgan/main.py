@@ -60,7 +60,7 @@ def main(config_file: str, exp_name: str):
 
 
 # Name of the directory in logs is taken from default
-# Names of the .csv's (loss & test) and .pth file for saving the trained model come from config exp_name
+# Names of the .csv's (loss & test) and .pth file for saving the trained model come from config exp.name
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--config_file", type=str, default="config/autoencoder.yml", help="config path to use")
