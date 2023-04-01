@@ -5,6 +5,7 @@ exp:
   type: "autoencoder"
   overfit: false
   name: "autoencoder_flag"
+  model_spec: "autoencoder"
 
 data:
   input_size: 144 # 16s

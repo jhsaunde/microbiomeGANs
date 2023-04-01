@@ -14,7 +14,6 @@ def test(model, config):
     with torch.no_grad():
         results = []
         for i, data in enumerate(data_loader):
-            print(i)
             inputs = data
             predicted_outputs = model(inputs)
             predicted_outputs = predicted_outputs.detach().numpy().tolist()

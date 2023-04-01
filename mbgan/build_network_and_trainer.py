@@ -7,10 +7,12 @@ def build_generator(config):
     input_size = config.data.input_size  # 16s
     output_size = config.data.output_size  # wgs
 
-    if config.exp.type == "autoencoder":
+    if config.exp.model_spec == "autoencoder":
         return ae_models.Autoencoder(input_size=input_size, output_size=output_size)
+    elif config.exp.model_spec == "autoencoder1":
+        return ae_models.Autoencoder1(input_size=input_size, output_size=output_size)
     elif config.exp.type == "simplegan":
-        return ae_models.Generator(input_size=input_size, output_size=output_size)
+        return ae_models.model_spec(input_size=input_size, output_size=output_size)
     elif config.exp.type == "cyclegan":
         # two generators for cyclegan
         return cyclegan_models.Generator(input_size=input_size, output_size=output_size), cyclegan_models.Generator(
@@ -37,7 +39,7 @@ def build_discriminator(config):
 
 
 def build_trainer(config, data_loader, networks):
-    if config.exp.type == "autoencoder":
+    if "autoencoder" in config.exp.type:
         return trainer.AETrainer(config=config, data_loader=data_loader, generator=networks["generator"])
     elif config.exp.type == "simplegan":
         return trainer.SimpleGANTrainer(config=config, data_loader=data_loader, generator=networks["generator"],

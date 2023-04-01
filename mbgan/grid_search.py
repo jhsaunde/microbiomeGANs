@@ -18,26 +18,28 @@ def run():
     for bs in [32, 64, 128]:
         for lr in [0.1, 0.01, 0.001, 0.0001]:
             for loss in ["mse", "l1", "kl", "wasserstein"]:
-                print(f"{bs}_{lr}_{loss}")
+                for models in ['autoencoder', 'autoencoder1']:
+                    print(f"{bs}_{lr}_{loss}_{models}")
 
-                config = process_config(config_file, exp_name=exp_name)
-                dataset = MBDataset(config=config)
-                data_loader = MBDataloader(dataset=dataset, config=config)
+                    config = process_config(config_file, exp_name=exp_name)
+                    dataset = MBDataset(config=config)
+                    data_loader = MBDataloader(dataset=dataset, config=config)
 
-                config.exp.name = f"AE_bs{bs}_lr{lr}_ls{loss}"
-                config.trainer.batch_size = bs
-                config.generator.lr = lr
-                config.generator.loss = loss
+                    config.exp.model_spec = models
+                    config.exp.name = f"AE_BS{bs}_LR{lr}_LS{loss}_M{models}"
+                    config.trainer.batch_size = bs
+                    config.generator.lr = lr
+                    config.generator.loss = loss
 
-                generator = build_generator(config)
-                kwargs["generator"] = generator
+                    generator = build_generator(config)
+                    kwargs["generator"] = generator
 
-                # Train the model
-                trainer = build_trainer(config=config, data_loader=data_loader, networks=kwargs)
-                trainer.train()
+                    # Train the model
+                    trainer = build_trainer(config=config, data_loader=data_loader, networks=kwargs)
+                    trainer.train()
 
-                # Test the model
-                test(model=trainer.generator, config=config)
+                    # Test the model
+                    test(model=trainer.generator, config=config)
 
 
 

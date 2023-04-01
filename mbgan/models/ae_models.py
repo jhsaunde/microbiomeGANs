@@ -42,7 +42,7 @@ class Autoencoder(nn.Module):
     def forward(self, x):
         x = self.log_transform(x)
         x = self.encoder(x)
-        # x = self.decoder(x)
+        #  x = self.decoder(x)
         return x
 
 
