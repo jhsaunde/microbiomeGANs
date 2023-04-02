@@ -20,8 +20,8 @@ class MBDataset(Dataset):
         self.preprocess_data()
 
     def preprocess_data(self):
-        self.df_16s = pd.read_csv(self.s16_csv).drop(['sample'], axis=1)
-        self.df_wgs = pd.read_csv(self.wgs_csv).drop(['sample'], axis=1)
+        self.df_16s = pd.read_csv(self.s16_csv, encoding='utf-8').drop(['sample'], axis=1)
+        self.df_wgs = pd.read_csv(self.wgs_csv, encoding='utf-8').drop(['sample'], axis=1)
 
         self.tensor_16s = torch.tensor(self.df_16s.values).float()
         self.tensor_wgs = torch.tensor(self.df_wgs.values).float()
@@ -44,7 +44,7 @@ class MBTestDataset(Dataset):
         self.preprocess_data()
 
     def preprocess_data(self):
-        self.df_16s = pd.read_csv(self.s16_csv).drop(['sample'], axis=1)
+        self.df_16s = pd.read_csv(self.s16_csv, encoding='utf-16').drop(['sample'], axis=1)
         self.tensor_16s = torch.tensor(self.df_16s.values).float()
 
     def __getitem__(self, index):

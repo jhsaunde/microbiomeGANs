@@ -15,4 +15,4 @@ module load NiaEnv/2019b intelpython3
 module load intel/2019u4
 source activate pyMBGAN
 
-python grid_search.py
+/home/o/oespinga/jhsaunde/.conda/envs/pyMBGAN/bin/python grid_search.py
