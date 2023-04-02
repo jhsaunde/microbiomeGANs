@@ -19,7 +19,7 @@ def run():
         for lr in [0.1, 0.01, 0.001, 0.0001]:
             for loss in ["mse", "l1", "kl", "wasserstein"]:
                 for models in ['autoencoder', 'autoencoder1']:
-                    print(f"{bs}_{lr}_{loss}_{models}")
+                    print(f"{bs}_{lr}_{loss}_{models}_def")
 
                     config = process_config(config_file, exp_name=exp_name)
                     dataset = MBDataset(config=config)
