@@ -44,7 +44,7 @@ class MBTestDataset(Dataset):
         self.preprocess_data()
 
     def preprocess_data(self):
-        self.df_16s = pd.read_csv(self.s16_csv, encoding='utf-16').drop(['sample'], axis=1)
+        self.df_16s = pd.read_csv(self.s16_csv, encoding='utf-8').drop(['sample'], axis=1)
         self.tensor_16s = torch.tensor(self.df_16s.values).float()
 
     def __getitem__(self, index):
@@ -52,8 +52,6 @@ class MBTestDataset(Dataset):
 
     def __len__(self):
         return min(len(self.df_16s), len(self.df_16s))
-
-
 
 
 class MBDataloader(DataLoader):

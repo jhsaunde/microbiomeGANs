@@ -10,7 +10,6 @@
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/mbgan/logs_archived" />
-            <excludedPath local="true" path="$PROJECT_DIR$/mbgan/dataset" />
             <excludedPath local="true" path="$PROJECT_DIR$/mbgan/logs" />
           </excludedPaths>
         </serverdata>

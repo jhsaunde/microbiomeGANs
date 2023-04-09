@@ -11,6 +11,7 @@ def test(model, config):
     data_loader = MBDataloader(dataset=dataset, config=config, shuffle=False, train=False)
     model.eval()
 
+
     with torch.no_grad():
         results = []
         for i, data in enumerate(data_loader):
