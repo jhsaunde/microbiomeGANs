@@ -12,7 +12,6 @@ s16 <- read_tsv("/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/raw_data/
 meta <- read_tsv("/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/raw_data/diabimmune_karelia_metadata.txt")
 
 
-
 #### 16S ----
 # Some OTU were incompletely parsed
 # such that rather than have a set of rows specify the entire taxonomic

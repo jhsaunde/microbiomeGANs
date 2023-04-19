@@ -4,12 +4,16 @@ from torch.utils.data import DataLoader, Dataset
 
 
 class MBDataset(Dataset):
-    def __init__(self, config):
+    def __init__(self, config, train=True):
         super().__init__()
         self.config = config
 
-        self.s16_csv = self.config.data.s16_csv
-        self.wgs_csv = self.config.data.wgs_csv
+        if train:
+            self.s16_csv = self.config.data.s16_csv
+            self.wgs_csv = self.config.data.wgs_csv
+        else:
+            self.s16_csv = self.config.data.validate_s16_csv
+            self.wgs_csv = self.config.data.validate_wgs_csv
 
         self.df_16s = None
         self.df_wgs = None
@@ -33,6 +37,34 @@ class MBDataset(Dataset):
         return min(len(self.df_16s), len(self.df_wgs))
 
 
+
+
+class MBDataloader(DataLoader):
+    """
+    Base class for all data loaders
+    """
+
+    def __init__(self, dataset, config, train=True):
+        self.dataset = dataset
+        self.config = config
+        if train:
+            self.shuffle = True
+            self.batch_size = self.config.trainer.batch_size
+        else:
+            # test
+            self.shuffle = False
+            self.batch_size = 1
+        self.collate_fn = None
+
+        self.batch_idx = 0
+        self.n_samples = len(dataset)
+
+        if self.collate_fn is None:
+            super().__init__(dataset=self.dataset, batch_size=self.batch_size, shuffle=self.shuffle, num_workers=0, drop_last=True)
+        else:
+            super().__init__(dataset=self.dataset, batch_size=self.batch_size, shuffle=self.shuffle, collate_fn=self.collate_fn, num_workers=0, drop_last=True)
+
+
 class MBTestDataset(Dataset):
     def __init__(self, config):
         super().__init__()
@@ -52,33 +84,3 @@ class MBTestDataset(Dataset):
 
     def __len__(self):
         return min(len(self.df_16s), len(self.df_16s))
-
-
-class MBDataloader(DataLoader):
-    """
-    Base class for all data loaders
-    """
-
-    def __init__(self, dataset, config, shuffle=True, train=True):
-        self.dataset = dataset
-        self.config = config
-        if train:
-            self.shuffle = shuffle
-            self.batch_size = self.config.trainer.batch_size
-        else:
-            # test
-            self.shuffle = False
-            self.batch_size = 1
-        self.collate_fn = None
-
-        self.batch_idx = 0
-        self.n_samples = len(dataset)
-
-        if self.collate_fn is None:
-            super().__init__(dataset=self.dataset, batch_size=self.batch_size, shuffle=self.shuffle,
-                             num_workers=0, drop_last=True)
-        else:
-            super().__init__(dataset=self.dataset, batch_size=self.batch_size, shuffle=self.shuffle,
-                             collate_fn=self.collate_fn, num_workers=0, drop_last=True)
-
-

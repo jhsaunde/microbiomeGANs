@@ -22,10 +22,9 @@ class AETrainer():
         else:
             raise ValueError("Please check loss name again")
 
-        self.optimizer = optim.Adam(self.generator.parameters(), lr=self.config.generator.hyperparameters.lr,
-                                    betas=(self.config.generator.hyperparameters.beta1,
-                                           self.config.generator.hyperparameters.beta2)
-                                    )
+        self.optimizer = optim.Adam(self.generator.parameters(),
+                                    lr=self.config.generator.hyperparameters.lr,
+                                    betas=(self.config.generator.hyperparameters.beta1,self.config.generator.hyperparameters.beta2))
         self.writer = SummaryWriter(log_dir=self.config.logdir)
 
     def train_on_batch(self, sixteens, wgs):
@@ -35,13 +34,10 @@ class AETrainer():
 
         # Generate
         wgs_generated = self.generator(sixteens)
-
         loss = self.loss(wgs_generated, wgs)
-
         loss.backward()
         self.optimizer.step()
         return loss
-
 
     def train(self):
         self.generator.train()

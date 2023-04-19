@@ -3,20 +3,25 @@ from trainer import trainer
 
 
 def build_generator(config):
-    # because the objective of this network is to go from 16s to wgs, the input is 16s, and output is wgs
+    # Network objective is to transform 16S to WGS data, unless specified otherwise (CycleGAN)
     input_size = config.data.input_size  # 16s
     output_size = config.data.output_size  # wgs
+    nodes = config.generator.nodes
 
-    if config.exp.model_spec == "autoencoder":
-        return ae_models.Autoencoder(input_size=input_size, output_size=output_size)
-    elif config.exp.model_spec == "autoencoder1":
-        return ae_models.Autoencoder1(input_size=input_size, output_size=output_size)
-    elif config.exp.type == "simplegan":
-        return ae_models.model_spec(input_size=input_size, output_size=output_size)
-    elif config.exp.type == "cyclegan":
-        # two generators for cyclegan
-        return cyclegan_models.Generator(input_size=input_size, output_size=output_size), cyclegan_models.Generator(
-            input_size=output_size, output_size=input_size)
+    if config.exp.model_spec == "autoencoder3":
+        return ae_models.Autoencoder_3L(input_size=input_size, output_size=output_size, nnodes=nodes)
+    elif config.exp.model_spec == "autoencoder5":
+        return ae_models.Autoencoder_5L(input_size=input_size, output_size=output_size, nnodes=nodes)
+    elif config.exp.model_spec == "feedforwarddecoder2":
+        return ae_models.Feedforward_Decoder2L(input_size=input_size, output_size=output_size, nnodes=nodes)
+    elif config.exp.model_spec == "feedforwarddecoder3":
+        return ae_models.Feedforward_Decoder3L(input_size=input_size, output_size=output_size, nnodes=nodes)
+    elif config.exp.model_spec == "feedforward1":
+        return ae_models.Feedforward_1L(input_size=input_size, output_size=output_size, nnodes=nodes)
+    elif config.exp.model_spec == "feedforward2":
+        return ae_models.Feedforward_2L(input_size=input_size, output_size=output_size, nnodes=nodes)
+    elif config.exp.model_spec == "feedforward3":
+        return ae_models.Feedforward_3L(input_size=input_size, output_size=output_size, nnodes=nodes)
 
     else:
         raise ValueError("exp type should be either autoencoder, cyclegan, or simplegan")

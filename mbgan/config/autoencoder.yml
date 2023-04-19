@@ -3,19 +3,20 @@ exp:
   experiment_dir: "/Users/jamessaunders/dev/microbiomeGANs/mbgan/logs/"
   dir: "/Users/jamessaunders/dev/microbiomeGANs/mbgan/"
   type: "autoencoder"
-  overfit: false
-  name: "autoencoder_flag"
+  name: "exp_name_yml"
   model_spec: "autoencoder"
 
 data:
-  input_size: 144 # 16s
-  output_size: 624 # wgs
-  s16_csv: "dataset/s16_genus_ra.csv"
-  wgs_csv: "dataset/wgs_species_ra.csv"
-  test_s16_csv: "dataset/s16_genus_nomatches.csv"
+  input_size: 138 # 16s
+  output_size: 502 # wgs
+  s16_csv: "dataset/simulated_data/train_sim_16s.csv"
+  wgs_csv: "dataset/simulated_data/train_sim_wgs.csv"
+  validate_s16_csv: "dataset/simulated_data/valid_sim_16s.csv"
+  validate_wgs_csv: "dataset/simulated_data/valid_sim_wgs.csv"
 
 generator:
   loss: "mse"
+  nodes: 128
   hyperparameters:
     lr: 0.001
     beta1: 0.9
@@ -27,7 +28,7 @@ generator:
       bce_loss: 1
 
 trainer:
-  num_epochs: 2
+  num_epochs: 100
   batch_size: 32
   log_freq: 5
   n_gpus: 1
