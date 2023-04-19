@@ -7,9 +7,9 @@
 # at a given taxonomic resolution
 library(tidyverse)
 library(here)
-wgs <- read_tsv("/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/raw_data/diabimmune_karelia_metaphlan_table.txt")
-s16 <- read_tsv("/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/raw_data/diabimmune_karelia_16s_otu_table.txt")
-meta <- read_tsv("/Users/jamessaunders/dev/microbiomeGANs/mbgan/dataset/raw_data/diabimmune_karelia_metadata.txt")
+wgs <- read_tsv("dataset/raw_data/diabimmune_karelia_metaphlan_table.txt")
+s16 <- read_tsv("dataset/raw_data/diabimmune_karelia_16s_otu_table.txt")
+meta <- read_tsv("dataset/raw_data/diabimmune_karelia_metadata.txt")
 
 
 #### 16S ----
