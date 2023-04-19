@@ -16,10 +16,8 @@ wgs_matrix <- wgs %>%
   select(-name) %>%
   as.matrix()
 
-plan(sequential, sequential, multisession)
+future::plan(future::sequential(), future::sequential(), future::multisession())
 
 fitted <- fitCV_SparseDOSSA2(data = wgs_matrix, lambdas = c(0.1, 1), K = 3, control = list(verbose=TRUE))
 
-list.save(fitted, 'list.rds')
-list.save(fitted, 'list.rdata')
-list.save(fitted, 'list.yaml')
+save(fitted, file = 'my_object.RData')
